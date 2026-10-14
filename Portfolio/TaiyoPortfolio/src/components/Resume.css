@@ -1,0 +1,63 @@
+.resume-intro {
+  max-width: 40rem;
+}
+
+.resume-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.resume-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2.5rem;
+}
+
+.resume-group h3 {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Vertical line with a dot per entry */
+.timeline {
+  border-left: 2px solid var(--border);
+}
+
+.timeline li {
+  position: relative;
+  padding: 0 0 1.75rem 1.5rem;
+}
+
+.timeline li::before {
+  content: '';
+  position: absolute;
+  left: -7px;
+  top: 0.35rem;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--accent);
+  transition: background var(--duration) var(--ease);
+}
+
+.timeline li:hover::before {
+  background: var(--accent);
+}
+
+.timeline h4 {
+  margin: 0.1rem 0 0;
+  font-size: 1.05rem;
+}
+
+.timeline-period {
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+
+.timeline-place {
+  color: var(--text);
+  margin-bottom: 0.4rem;
+}
