@@ -1,3 +1,5 @@
+import { useRef, useState } from 'react'
+import emailjs from '@emailjs/browser'
 import useReveal from '../hooks/useReveal'
 import './Contact.css'
 
@@ -24,8 +26,28 @@ const contactLinks = [
   },
 ]
 
+const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID
+const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID
+const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+
 function Contact() {
   const [ref, isVisible] = useReveal()
+  const formRef = useRef(null)
+  const [status, setStatus] = useState('idle') // idle | sending | sent | error
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setStatus('sending')
+    try {
+      await emailjs.sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, formRef.current, {
+        publicKey: EMAILJS_PUBLIC_KEY,
+      })
+      setStatus('sent')
+      formRef.current.reset()
+    } catch {
+      setStatus('error')
+    }
+  }
 
   return (
     <section id="contact" className="section contact">
@@ -35,6 +57,28 @@ function Contact() {
           I am always open to new opportunities, collaborations, or just a chat about tech. Feel free
           to reach out!
         </p>
+
+        <form ref={formRef} className="contact-form" onSubmit={handleSubmit}>
+          <label>
+            Name
+            <input type="text" name="from_name" required maxLength={100} />
+          </label>
+          <label>
+            Email
+            <input type="email" name="reply_to" required maxLength={150} />
+          </label>
+          <label>
+            Message
+            <textarea name="message" rows={5} required maxLength={2000} />
+          </label>
+          <button type="submit" disabled={status === 'sending'}>
+            {status === 'sending' ? 'Sending...' : 'Send message'}
+          </button>
+          <p className="contact-status" role="status">
+            {status === 'sent' && 'Thanks! Your message was sent.'}
+            {status === 'error' && 'Something went wrong. Please email me directly instead.'}
+          </p>
+        </form>
 
         <ul className="contact-links">
           {contactLinks.map((link) => (
